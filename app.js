@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const fileupload = require('express-fileupload');
+const methodOverride = require('method-override');
 const path = require('path');
 const ejs = require('ejs');
 const fs = require('fs');
@@ -9,7 +10,11 @@ const Photo = require('./models/Photo');
 const app = express();
 
 //connected DB
-mongoose.connect('mongodb://localhost/photoblog-db');
+mongoose.connect('mongodb://localhost/photoblog-db', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+
+});
 //template engine
 app.set('view engine', 'ejs');
 
@@ -18,6 +23,9 @@ app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(fileupload());
+app.use(methodOverride('_method', {
+  methods: ['POST', 'GET']
+}));
 
 
 app.get('/', async (req, res) => {
@@ -26,7 +34,6 @@ app.get('/', async (req, res) => {
 })
 app.get('/add', (req, res) => {
   res.render('add');
-
 });
 
 app.get('/photos/:id', async (req, res) => {
@@ -59,8 +66,28 @@ app.post('/photos', (req, res) => {
 
     res.redirect('/');
   })
+})
 
+app.get('/photos/edit/:id', async (req, res) => {
+  const photo = await Photo.findOne({ _id: req.params.id });
+  res.render('edit', { photo });
+});
 
+app.put('/photos/:id', async (req, res) => {
+  const photo = await Photo.findOne({ _id: req.params.id });
+  photo.title = req.body.title
+  photo.description = req.body.description
+  photo.save();
+  res.redirect(`/photos/${req.params.id}`);
+});
+
+app.delete('/photos/:id', async (req, res) => {
+  const photo = await Photo.findOne({ _id: req.params.id });
+
+  let deletedImage = __dirname + '/public' + photo.image;
+  fs.unlinkSync(deletedImage);
+  await Photo.findByIdAndDelete(req.params.id);
+  res.redirect('/');
 })
 
 const PORT = 8000;
