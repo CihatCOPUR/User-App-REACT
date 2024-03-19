@@ -31,12 +31,12 @@
                    
                     <% for (let i=0; i<photos.length; i++) { %>
                         <div class="col-lg-4 col-md-6 col-sm-12 mb-4" style="height: 700px;">
-                            <div class="card h-100">
-                                <img src="<%= photos[i].image %>" class="card-img-top" alt="Image" width="300px" height="300px">
+                            <div class="card h-100 p-4">
+                                <img src="<%= photos[i].image %>"  class="card-img-top"  alt="Image"  height="250px">
                                 <center class="card-body">
                                     <h5 class="card-title"><%= photos[i].title %></h5>
                                     <p class="card-text" style="max-height: 180px; overflow: hidden;"> <%= photos[i].description %> </p>
-                                    <a href="/photos/<%= photos[i]._id %>" class="btn btn-primary">View Photo</a>
+                                    <a href="/photos/<%= photos[i]._id %>" class="btn btn-primary">View Book</a>
                                 </center>
                             </div>
                         </div>

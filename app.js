@@ -30,6 +30,7 @@ app.use(methodOverride('_method', {
 app.get('/', photoController.getAllPhotos);
 app.get('/photos/:id', photoController.getPhoto);
 app.post('/photos', photoController.createPhoto);
+// app.get('/photos/:id/add', pageController.getAddPage); hata var
 app.get('/photos/edit/:id', photoController.updatePhoto);
 app.delete('/photos/:id', photoController.deletePhoto);
 
